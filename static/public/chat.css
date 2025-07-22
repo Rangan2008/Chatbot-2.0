@@ -1,0 +1,1007 @@
+/* CSS Variables for theming */
+:root {
+    --primary: #3b82f6;
+    --primary-light: rgba(59, 130, 246, 0.1);
+    --surface: #ffffff;
+    --background: #f8fafc;
+    --text: #1e293b;
+    --text-secondary: #64748b;
+    --border: #e2e8f0;
+    --hover: #f1f5f9;
+}
+
+[data-theme="dark"] {
+    --primary: #60a5fa;
+    --primary-light: rgba(96, 165, 250, 0.1);
+    --surface: #1e293b;
+    --background: #0f172a;
+    --text: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border: #334155;
+    --hover: #334155;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    transition: all 0.2s ease;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* User Avatar Dropdown */
+.user-menu {
+    position: relative;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 2px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--hover);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0.5rem 0;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    margin-bottom: 1rem;
+}
+
+.sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-btn {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.sidebar-btn:hover {
+    background: var(--hover);
+    border-color: var(--primary);
+}
+
+.sidebar-btn.primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.sidebar-btn.primary:hover {
+    opacity: 0.9;
+}
+
+/* Chat History */
+.chat-history-section {
+    margin-top: 1rem;
+}
+
+.history-group {
+    margin-bottom: 1.5rem;
+}
+
+.history-group-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+.chat-history-item {
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 0.25rem;
+    transition: background 0.2s ease;
+}
+
+.chat-history-item:hover {
+    background: var(--hover);
+}
+
+.chat-history-item.active {
+    background: var(--primary-light);
+    border-left: 3px solid var(--primary);
+}
+
+.chat-history-item h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.chat-history-item p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Search Modal */
+.search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+}
+
+.search-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.search-modal-content {
+    background: var(--surface);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.search-modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-modal-header h3 {
+    margin: 0;
+    color: var(--text);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.close-btn:hover {
+    background: var(--hover);
+}
+
+.search-input-container {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1rem;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+}
+
+.search-result-item {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-result-item:hover {
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-result-item h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.search-result-item p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.no-results {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 2rem;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--hover);
+}
+.theme-toggle.active {
+    background: var(--primary-light);
+    border-color: var(--primary);
+}
+
+/* Main Chat Container */
+.main-container {
+    display: flex;
+    height: calc(100vh - 70px); /* Adjust based on header height */
+}
+
+/* Chat Area */
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--background);
+    overflow: hidden;
+}
+
+/* Messages Section */
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+/* Typing Indicator */
+.typing-indicator {
+    text-align: left;
+    padding: 0.5rem 1.5rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    display: none; /* default hidden */
+}
+
+.typing-indicator .typing-dots {
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Input Section */
+.input-container {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Active file preview */
+.active-file-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    background: var(--hover);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    color: var(--text);
+}
+
+/* Input Row */
+.input-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+/* Textarea */
+.input-group {
+    flex: 1;
+}
+
+.input-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    resize: none;
+    min-height: 42px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--surface);
+    color: var(--text);
+}
+
+/* Input Buttons */
+.input-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Button Styles */
+.icon-btn {
+    border: none;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background: var(--hover);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--border);
+}
+
+/* Primary Button */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* Upload Button Inside Input */
+#upload-btn {
+    background: var(--hover);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+#upload-btn:hover {
+    background: var(--border);
+}
+
+/* Upload Preview Text */
+.file-preview {
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Upload Section Legacy (hidden by default) */
+.upload-section {
+    padding: 1rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+}
+
+.upload-section h3 {
+    margin: 0.5rem 0;
+    color: var(--text);
+}
+
+#fileList {
+    font-size: 0.875rem;
+    color: var(--text);
+}
+
+/* Chat Message Container */
+.message {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin: 1rem 0;
+    max-width: 75%;
+}
+
+.message.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message.ai {
+    align-self: flex-start;
+}
+
+.message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.message-avatar .avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.message-avatar .avatar-initials {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    background: var(--primary);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.message-avatar .ai-avatar {
+    font-size: 1.2rem;
+    background: var(--hover);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+}
+
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+}
+
+.message-content {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.message.user .message-content {
+    background: var(--primary);
+    color: white;
+    border-top-right-radius: 4px;
+}
+
+.message.ai .message-content {
+    background: var(--hover);
+    color: var(--text);
+    border-top-left-radius: 4px;
+}
+
+.message-timestamp {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+    padding: 0 0.5rem;
+}
+
+.message.user .message-timestamp {
+    text-align: right;
+}
+
+/* Container holding messages */
+.messages {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+/* Message Author */
+.message-author {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--text);
+}
+
+/* Sidebar toggle button (for mobile view) */
+/* Sidebar Toggle Button */
+.sidebar-toggle-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+    margin-right: 1rem;
+}
+
+/* Mobile User Menu in Sidebar */
+.mobile-user-menu {
+    display: none;
+    margin-bottom: 1rem;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 70px);
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1400;
+}
+
+.sidebar.show + .sidebar-overlay {
+    display: block;
+}
+.sidebar-overlay {
+    display: none;
+}
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 70px; /* height of header */
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: var(--surface);
+        z-index: 1500;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+    .sidebar-toggle-btn {
+        display: inline-block;
+    }
+
+    #desktop-user-menu {
+        display: none;
+    }
+
+    .mobile-user-menu {
+        display: block;
+    }
+
+    .main-container {
+        flex-direction: column;
+    }
+
+    .chat-container {
+        width: 100%;
+    }
+}
+/* Enhanced chat input */
+.input-with-upload {
+  position: relative;
+  width: 100%;
+}
+
+/* Chat textarea */
+.chat-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  resize: none;
+  min-height: 42px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--surface);
+  color: var(--text);
+  padding-right: 8rem; /* space for upload button */
+}
+
+/* Upload section inside input */
+.file-upload-section {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+
+/* Upload preview text */
+.file-preview {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+/* Upload button */
+.upload-btn {
+  background: var(--hover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+  background: var(--border);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .input-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .file-upload-section {
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .chat-input {
+    padding-right: 1rem;
+  }
+
+  .input-buttons {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+.input-with-icons {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 0.8rem 3.5rem 0.8rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  resize: none;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.icon-actions {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+.icon-btn:hover {
+  color: var(--primary);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* Tooltip on hover */
+.tooltip[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+}
+.tooltip {
+    position: relative;
+    cursor: pointer;
+}
+.user-menu {
+  position: relative;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.user-dropdown.show {
+  display: flex;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text);
+  transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--hover);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.3rem 0;
+}
+
+.input-container {
+    padding: 1rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.input-group {
+    flex: 1 1 auto;
+    width: 100%;
+    position: relative;
+}
+
+.input-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    resize: none;
+    background: var(--surface);
+    color: var(--text);
+    box-sizing: border-box;
+}
+
+.input-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#file-upload-section {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    #file-upload-section {
+        position: static;
+        margin-top: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .input-row {
+        flex-direction: column;
+    }
+
+    .input-buttons {
+        justify-content: flex-end;
+        width: 100%;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+}

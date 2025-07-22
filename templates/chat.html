@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - EchoBot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='public/chat.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* Enhanced styles for new features */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .avatar-initials {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--hover);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 0;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-btn {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-btn:hover {
+            background: var(--hover);
+            border-color: var(--primary);
+        }
+
+        .sidebar-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .sidebar-btn.primary:hover {
+            opacity: 0.9;
+        }
+
+        .chat-history-section {
+            margin-top: 1rem;
+        }
+
+        .history-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .history-group-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .chat-history-item {
+            padding: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+            transition: background 0.2s ease;
+        }
+
+        .chat-history-item:hover {
+            background: var(--hover);
+        }
+
+        .chat-history-item.active {
+            background: var(--primary-light);
+            border-left: 3px solid var(--primary);
+        }
+
+        .chat-history-item h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        .chat-history-item p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Search Modal */
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .search-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .search-modal-content {
+            background: var(--surface);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-modal-header h3 {
+            margin: 0;
+            color: var(--text);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--hover);
+        }
+
+        .search-input-container {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .search-results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 1.5rem;
+        }
+
+        .search-result-item {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-result-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-result-item h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .search-result-item p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem;
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--hover);
+        }
+
+        /* CSS Variables for theming */
+        :root {
+            --primary: #3b82f6;
+            --primary-light: rgba(59, 130, 246, 0.1);
+            --surface: #ffffff;
+            --background: #f8fafc;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --hover: #f1f5f9;
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --primary-light: rgba(96, 165, 250, 0.1);
+            --surface: #1e293b;
+            --background: #0f172a;
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --hover: #334155;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+
+<body class="chat">
+    <div class="header">
+        <div class="header-left">
+            <button id="sidebar-toggle" class="sidebar-toggle-btn">☰</button>
+            <div class="logo">🤖 EchoBot</div>
+            <span id="user-info"></span>
+        </div>
+        <div class="header-right" id="desktop-user-menu">
+            <div class="user-menu">
+                <div class="user-avatar" id="desktop-user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-dropdown" id="user-dropdown-menu">
+                    <div class="dropdown-item" id="profile-btn"><i class="fas fa-user-circle"></i> Profile</div>
+                    <div class="dropdown-item" id="theme-toggle"><i class="fas fa-moon"></i> Toggle Dark Mode</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" id="logout-dropdown"><i class="fas fa-sign-out-alt"></i> Logout</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="mobile-user-menu" id="mobile-user-menu">
+                <div class="user-menu">
+                    <div class="user-avatar" id="mobile-user-avatar">U</div>
+                    <div class="user-dropdown" id="mobile-user-dropdown">
+                        <div class="dropdown-item" id="profile-btn-mobile">👤 Profile</div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" id="theme-toggle-dropdown-mobile">🌓 Toggle Theme</div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" id="logout-dropdown-mobile">🚪 Logout</div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-header">
+                <h3>Chat History</h3>
+            </div>
+
+            <div class="sidebar-buttons">
+                <button class="sidebar-btn primary" id="new-chat-btn">
+                    ➕ New Chat
+                </button>
+                <button class="sidebar-btn" id="export-chat-btn">
+                    📥 Export Chat
+                </button>
+                <button class="sidebar-btn" id="search-chat-btn">
+                    🔍 Search Chat
+                </button>
+            </div>
+
+            <div class="chat-history-section">
+                <div id="chat-history-container">
+                    <!-- Chat history will be populated here by JS -->
+                </div>
+            </div>
+        </div>
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+        <div class="chat-container">
+            <div class="messages" id="messages">
+                <div class="empty-state">
+                    <h2>👋 Welcome to EchoBot!</h2>
+                    <p>Start a conversation by typing a message below. You can also upload files to analyze.</p>
+                </div>
+            </div>
+
+            <!-- Legacy upload section, hidden via CSS -->
+            <div class="upload-section" style="display: none;">
+                <h3>Upload a Document</h3>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" id="uploadFile" name="file" accept=".pdf,.png,.jpg,.jpeg,.gif" required>
+                    <button type="submit">Upload</button>
+                </form>
+                <h3>Your Uploaded Files</h3>
+                <div id="fileList"></div>
+            </div>
+
+            <div class="typing-indicator" id="typing-indicator">
+                <span class="typing-dots">AI is typing...</span>
+            </div>
+
+            <div class="input-container">
+                <div class="active-file-indicator" id="active-file-indicator">
+                    <span>📄</span>
+                    <span id="active-file-name">No file selected</span>
+                    <button onclick="clearActiveFile()"
+                        style="background: none; border: none; color: #dc2626; cursor: pointer;">✕</button>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group input-with-icons">
+                        <textarea id="user-input" class="chat-input" placeholder="Type your message here..."
+                            rows="1"></textarea>
+
+                        <div class="icon-actions">
+                            <!-- Upload Icon -->
+                            <label for="file-upload" class="icon-btn tooltip" title="Upload File">
+                                <i class="fas fa-paperclip"></i>
+                            </label>
+                            <input type="file" id="file-upload" accept=".pdf,.png,.jpg,.jpeg,.gif"
+                                style="display: none;" />
+
+                            <!-- Voice Input -->
+                            <button class="icon-btn tooltip" id="voice-btn" title="Voice Input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+
+                            <!-- Send Button -->
+                            <button class="icon-btn btn-primary tooltip" id="send-btn" title="Send">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="search-modal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h3>🔍 Search Chat History</h3>
+                <button class="close-btn" id="close-search-modal">&times;</button>
+            </div>
+            <div class="search-input-container">
+                <input type="text" class="search-input" id="search-input" placeholder="Search your conversations...">
+            </div>
+            <div class="search-results" id="search-results">
+                <div class="no-results">
+                    Type to search your chat history...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Sidebar toggle functionality
+        const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('show');
+            sidebarOverlay.style.display = 'none';
+        });
+
+        // Auto-resize textarea
+        const userInput = document.getElementById('user-input');
+        userInput.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+        // File upload (inline)
+        document.getElementById('upload-btn').addEventListener('click', () => {
+            document.getElementById('file-upload').click();
+        });
+
+        document.getElementById('file-upload').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const preview = document.getElementById('file-preview');
+                preview.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                preview.style.display = 'block';
+                document.getElementById('file-upload-section').classList.add('active');
+            }
+        });
+
+        function clearActiveFile() {
+            document.getElementById('active-file-indicator').style.display = 'none';
+            if (window.echoBot) {
+                window.echoBot.activeFileId = null;
+            }
+        }
+
+        // User dropdown functionality
+        const userAvatar = document.getElementById('user-avatar');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        userAvatar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            userDropdown.classList.remove('show');
+        });
+
+        userDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Theme toggle
+        document.getElementById('theme-toggle-dropdown').addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            userDropdown.classList.remove('show');
+        });
+
+        // Profile button
+        document.getElementById('profile-btn').addEventListener('click', () => {
+            window.location.href = '/profile';
+            userDropdown.classList.remove('show');
+        });
+
+        // Mobile profile button
+        document.getElementById('profile-btn-mobile').addEventListener('click', () => {
+            window.location.href = '/profile';
+        });
+
+        // Logout from dropdown
+        document.getElementById('logout-dropdown').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+        // Initialize theme
+        const savedTheme = localStorage.getItem('theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Auth check and load user profile
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/api/profile', { credentials: 'include' });
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                const userData = await response.json();
+                
+                // Update desktop avatar
+                const desktopAvatar = document.getElementById('desktop-user-avatar');
+                const mobileAvatar = document.getElementById('mobile-user-avatar');
+                const userInfo = document.getElementById('user-info');
+                
+                if (userData.avatar && userData.avatar !== '/static/Avatar.jpeg') {
+                    // User has custom avatar
+                    desktopAvatar.innerHTML = `<img src="${userData.avatar}" alt="User Avatar" class="avatar-image">`;
+                    mobileAvatar.innerHTML = `<img src="${userData.avatar}" alt="User Avatar" class="avatar-image">`;
+                } else {
+                    // Use default avatar or initials
+                    const initials = userData.username ? userData.username.substring(0, 2).toUpperCase() : 'U';
+                    desktopAvatar.innerHTML = `<span class="avatar-initials">${initials}</span>`;
+                    mobileAvatar.innerHTML = `<span class="avatar-initials">${initials}</span>`;
+                }
+                
+                // Update user info
+                userInfo.textContent = `Welcome, ${userData.username}`;
+                
+                return userData;
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        // Load user profile on page load
+        loadUserProfile();
+
+        // File upload (legacy/extracted text)
+        document.getElementById('uploadForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const file = document.getElementById('uploadFile').files[0];
+            if (!file) return alert("Please select a file");
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch('/api/files', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert("File uploaded successfully");
+                    loadFiles();
+                } else {
+                    alert(result.error || "Failed to upload");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error uploading file");
+            }
+        });
+
+        async function loadFiles() {
+            const fileList = document.getElementById("fileList");
+            fileList.innerHTML = "Loading...";
+            try {
+                const res = await fetch('/api/files', { credentials: 'include' });
+                const files = await res.json();
+                if (!files.length) {
+                    fileList.innerHTML = "<p>No files uploaded yet.</p>";
+                    return;
+                }
+
+                fileList.innerHTML = '';
+                files.forEach(file => {
+                    const div = document.createElement('div');
+                    div.style.marginBottom = "15px";
+                    div.innerHTML = `
+                        <strong>${file.filename}</strong> <br>
+                        <details><summary>View Extracted Text</summary><pre>${file.extracted_text}</pre></details>
+                        <hr>
+                    `;
+                    fileList.appendChild(div);
+                });
+            } catch (err) {
+                console.error(err);
+                fileList.innerHTML = "<p>Error loading files.</p>";
+            }
+        }
+
+        // Initial file load (hidden anyway)
+        // window.onload = loadFiles;
+    </script>
+
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

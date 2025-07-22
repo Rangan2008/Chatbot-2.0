@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoBot - AI Chat Assistant</title>
+</head>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='public/style.css') }}">
+</head>
+
+<body class="index">
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <span class="logo-icon">🤖</span>
+                <span class="logo-text">EchoBot</span>
+            </div>
+            <div class="nav-links" id="nav-links">
+                <a href="/login" class="btn btn-secondary nav-btn" id="login-btn">Login</a>
+                <a href="/signup" class="btn btn-primary nav-btn" id="signup-btn">Sign Up</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <div class="nav-user-avatar" id="nav-user-avatar">
+                    <span class="avatar-initials">U</span>
+                </div>
+                <div class="nav-dropdown" id="nav-dropdown">
+                    <a href="/chat" class="dropdown-item">💬 Chat</a>
+                    <a href="/profile" class="dropdown-item">👤 Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" id="nav-logout">🚪 Logout</button>
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="/login" class="btn btn-secondary nav-btn" id="mobile-login-btn">Login</a>
+            <a href="/signup" class="btn btn-primary nav-btn" id="mobile-signup-btn">Sign Up</a>
+            <div class="mobile-user-section" id="mobile-user-section" style="display: none;">
+                <a href="/chat" class="btn btn-primary nav-btn">💬 Go to Chat</a>
+                <a href="/profile" class="btn btn-secondary nav-btn">👤 Profile</a>
+                <button class="btn btn-outline nav-btn" id="mobile-logout">🚪 Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="loading" id="loading">
+            <div class="spinner-container">
+                <div class="spinner">
+                    <div class="spinner-circle"></div>
+                    <div class="spinner-circle"></div>
+                    <div class="spinner-circle"></div>
+                    <div class="spinner-circle"></div>
+                </div>
+            </div>
+            <p>Loading...</p>
+        </div>
+        
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-background"></div>
+            <div class="container-1">
+                <div class="hero">
+                    <div class="hero-badge">
+                        <span class="badge-text">🚀 Powered by AI</span>
+                    </div>
+                    <h1>Meet EchoBot</h1>
+                    <h2 class="hero-subtitle">Your Intelligent Conversation Partner</h2>
+                    <p class="hero-description">
+                        Transform the way you interact with AI. Upload documents, analyze images, 
+                        and engage in meaningful conversations with our advanced chatbot technology.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <a href="/signup" class="btn btn-primary btn-large">
+                            <span class="btn-icon">✨</span>
+                            Start Chatting
+                        </a>
+                        <a href="/login" class="btn btn-secondary btn-large">
+                            <span class="btn-icon">👋</span>
+                            Welcome Back
+                        </a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">10K+</span>
+                            <span class="stat-label">Conversations</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">5K+</span>
+                            <span class="stat-label">Files Analyzed</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">99.9%</span>
+                            <span class="stat-label">Uptime</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Why Choose EchoBot?</h2>
+                    <p>Discover the powerful features that make conversations smarter and more productive</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon">🧠</div>
+                        </div>
+                        <h3>Advanced AI Intelligence</h3>
+                        <p>Powered by cutting-edge language models for natural, context-aware conversations</p>
+                        <div class="feature-highlight">Smart & Intuitive</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon">📄</div>
+                        </div>
+                        <h3>Document Analysis</h3>
+                        <p>Upload PDFs and get instant insights, summaries, and answers from your documents</p>
+                        <div class="feature-highlight">PDF Support</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon">🖼️</div>
+                        </div>
+                        <h3>Image Recognition</h3>
+                        <p>Analyze images and extract text using advanced OCR technology</p>
+                        <div class="feature-highlight">OCR Powered</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon">�</div>
+                        </div>
+                        <h3>Chat History</h3>
+                        <p>Never lose a conversation. Access your complete chat history anytime</p>
+                        <div class="feature-highlight">Always Saved</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon">🔒</div>
+                        </div>
+                        <h3>Secure & Private</h3>
+                        <p>Your data is protected with industry-standard security measures</p>
+                        <div class="feature-highlight">User Isolation</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon">🌙</div>
+                        </div>
+                        <h3>Dark Mode Support</h3>
+                        <p>Comfortable chatting experience with automatic theme switching</p>
+                        <div class="feature-highlight">Eye Friendly</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Ready to Start Your AI Journey?</h2>
+                    <p>Join thousands of users who are already experiencing smarter conversations</p>
+                    <div class="cta-buttons">
+                        <a href="/signup" class="btn btn-primary btn-large">
+                            Create Free Account
+                        </a>
+                        <a href="/login" class="btn btn-outline btn-large">
+                            Sign In
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+<script>
+  // Theme toggle functionality
+  const themeToggle = document.createElement('button');
+  themeToggle.className = 'theme-toggle';
+  themeToggle.innerHTML = '🌓';
+  document.body.appendChild(themeToggle);
+
+  // Check for saved theme preference or use preferred color scheme
+  const currentTheme = localStorage.getItem('theme') || 
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', currentTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+
+  // Check if user is logged in and update navigation
+  async function checkUserAuth() {
+    try {
+      const response = await fetch('/api/profile', { credentials: 'include' });
+      if (response.ok) {
+        const userData = await response.json();
+        
+        // User is logged in, show user menu
+        document.getElementById('nav-links').style.display = 'none';
+        document.getElementById('user-menu').style.display = 'block';
+        
+        // Update avatar
+        const navAvatar = document.getElementById('nav-user-avatar');
+        if (userData.avatar && userData.avatar !== '/static/Avatar.jpeg') {
+          navAvatar.innerHTML = `<img src="${userData.avatar}" alt="User Avatar" class="avatar-image">`;
+        } else {
+          const initials = userData.username ? userData.username.substring(0, 2).toUpperCase() : 'U';
+          navAvatar.innerHTML = `<span class="avatar-initials">${initials}</span>`;
+        }
+        
+        // Hide login/signup buttons in mobile menu
+        document.getElementById('mobile-login-btn').style.display = 'none';
+        document.getElementById('mobile-signup-btn').style.display = 'none';
+        document.getElementById('mobile-user-section').style.display = 'flex';
+        
+      } else {
+        // User is not logged in, show login/signup buttons
+        document.getElementById('nav-links').style.display = 'flex';
+        document.getElementById('user-menu').style.display = 'none';
+        document.getElementById('mobile-user-section').style.display = 'none';
+      }
+    } catch (error) {
+      // Error checking auth, assume not logged in
+      document.getElementById('nav-links').style.display = 'flex';
+      document.getElementById('user-menu').style.display = 'none';
+      document.getElementById('mobile-user-section').style.display = 'none';
+    }
+  }
+
+  // Navigation dropdown functionality
+  const navUserAvatar = document.getElementById('nav-user-avatar');
+  const navDropdown = document.getElementById('nav-dropdown');
+
+  navUserAvatar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navDropdown.classList.toggle('show');
+  });
+
+  document.addEventListener('click', () => {
+    navDropdown.classList.remove('show');
+  });
+
+  // Logout functionality
+  document.getElementById('nav-logout').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  });
+
+  document.getElementById('mobile-logout').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  });
+
+  // Mobile menu functionality
+  const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  mobileMenuToggle.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+    mobileMenuToggle.classList.toggle('active');
+  });
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!mobileMenuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+      mobileMenu.classList.remove('active');
+      mobileMenuToggle.classList.remove('active');
+    }
+  });
+
+  // Check if user is logged in and update navigation
+  async function checkUserLogin() {
+    try {
+      const response = await fetch('/api/profile', { credentials: 'include' });
+      if (response.ok) {
+        const userData = await response.json();
+        showUserMenu(userData);
+      } else {
+        showGuestMenu();
+      }
+    } catch (error) {
+      showGuestMenu();
+    }
+  }
+
+  function showUserMenu(userData) {
+    // Hide login/signup buttons
+    document.getElementById('nav-links').style.display = 'none';
+    document.getElementById('mobile-login-btn').style.display = 'none';
+    document.getElementById('mobile-signup-btn').style.display = 'none';
+    
+    // Show user menu
+    const userMenu = document.getElementById('user-menu');
+    const mobileUserSection = document.getElementById('mobile-user-section');
+    const navAvatar = document.getElementById('nav-user-avatar');
+    
+    userMenu.style.display = 'block';
+    mobileUserSection.style.display = 'flex';
+    
+    // Update avatar
+    if (userData.avatar && userData.avatar !== '/static/Avatar.jpeg') {
+      navAvatar.innerHTML = `<img src="${userData.avatar}" alt="User Avatar" class="avatar-image">`;
+    } else {
+      const initials = userData.username ? userData.username.substring(0, 2).toUpperCase() : 'U';
+      navAvatar.innerHTML = `<span class="avatar-initials">${initials}</span>`;
+    }
+  }
+
+  function showGuestMenu() {
+    // Show login/signup buttons
+    document.getElementById('nav-links').style.display = 'flex';
+    document.getElementById('mobile-login-btn').style.display = 'block';
+    document.getElementById('mobile-signup-btn').style.display = 'block';
+    
+    // Hide user menu
+    document.getElementById('user-menu').style.display = 'none';
+    document.getElementById('mobile-user-section').style.display = 'none';
+  }
+
+  // Navigation user menu dropdown
+  const indexNavAvatar = document.getElementById('nav-user-avatar');
+  const indexNavDropdown = document.getElementById('nav-dropdown');
+
+  indexNavAvatar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    indexNavDropdown.classList.toggle('show');
+  });
+
+  // Logout functionality
+  document.getElementById('nav-logout').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  });
+
+  document.getElementById('mobile-logout').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  });
+
+  // Check login status on page load
+  checkUserLogin();
+
+  // Remove loading class when page is fully loaded
+  window.addEventListener('load', () => {
+    document.body.classList.remove('loading');
+  });
+
+  // Add smooth scrolling for any anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+
+  // Check user authentication on page load
+  document.addEventListener('DOMContentLoaded', checkUserAuth);
+</script>
+</html>

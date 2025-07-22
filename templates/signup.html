@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - EchoBot</title>
+</head>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='public/style.css') }}">
+</head>
+
+<body class="auth">
+    <div class="loading" id="loading">
+        <div class="spinner-container">
+            <div class="spinner">
+                <div class="spinner-circle"></div>
+                <div class="spinner-circle"></div>
+                <div class="spinner-circle"></div>
+                <div class="spinner-circle"></div>
+            </div>
+        </div>
+        <p>Loading...</p>
+    </div>
+    <div class="signup-container">
+        <div class="logo">
+            <h1>🤖 EchoBot</h1>
+            <p>Create your account and start chatting!</p>
+        </div>
+
+        <div id="message-container"></div>
+
+        <form id="signup-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                <small>3-32 characters, letters, numbers, underscore, and hyphen only</small>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <small>At least 8 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            </div>
+
+            <button type="submit" class="btn" id="signup-btn">Create Account</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Creating your account...
+        </div>
+
+        <div class="links">
+            <p>Already have an account? <a href="/login">Sign in here</a></p>
+            <p><a href="/">← Back to Home</a></p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signup-form');
+        const messageContainer = document.getElementById('message-container');
+        const signupBtn = document.getElementById('signup-btn');
+        const loading = document.getElementById('loading');
+
+        function showMessage(message, type = 'error') {
+            messageContainer.innerHTML = `<div class="${type}">${message}</div>`;
+            setTimeout(() => {
+                messageContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                signupBtn.disabled = true;
+                signupBtn.textContent = 'Creating Account...';
+                loading.style.display = 'block';
+            } else {
+                signupBtn.disabled = false;
+                signupBtn.textContent = 'Create Account';
+                loading.style.display = 'none';
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const data = {
+                username: formData.get('username'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                confirmPassword: formData.get('confirm-password')
+            };
+
+            // Client-side validation
+            if (!data.username || !data.email || !data.password || !data.confirmPassword) {
+                showMessage('Please fill in all fields');
+                return;
+            }
+
+            if (data.password !== data.confirmPassword) {
+                showMessage('Passwords do not match');
+                return;
+            }
+
+            if (data.password.length < 8) {
+                showMessage('Password must be at least 8 characters long');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                const response = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: data.username,
+                        email: data.email,
+                        password: data.password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('Account created successfully! Redirecting to login...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    showMessage(result.error || 'Registration failed');
+                }
+            } catch (error) {
+                showMessage('Network error. Please try again.');
+                console.error('Signup error:', error);
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Check if user is already logged in
+        fetch('/api/chats', { credentials: 'include' })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/chat';
+                }
+            })
+            .catch(() => {
+                // User not logged in, stay on signup page
+            });
+    </script>
+</body>
+
+</html>

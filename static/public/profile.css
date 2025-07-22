@@ -1,0 +1,365 @@
+:root {
+  --background: #f8f9fa;
+  --surface: #ffffff;
+  --text: #212529;
+  --text-secondary: #6c757d;
+  --primary: #4e73df;
+  --primary-dark: #2e59d9;
+  --hover: #f1f3f9;
+  --border: #e3e6f0;
+  --danger: #e74a3b;
+  --success: #1cc88a;
+  --input-bg: #ffffff;
+}
+
+[data-theme="dark"] {
+  --background: #1a1a2e;
+  --surface: #16213e;
+  --text: #f8f9fa;
+  --text-secondary: #adb5bd;
+  --primary: #4e73df;
+  --hover: #2a2a4a;
+  --border: #2d3748;
+  --input-bg: #1e2a4a;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.profile-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: var(--surface);
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  border: 3px solid var(--primary);
+  box-shadow: 0 4px 12px rgba(78, 115, 223, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.user-avatar input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.username {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.section {
+  margin-top: 2.5rem;
+}
+
+.section h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.section h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background: var(--primary);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.info-item {
+  background: var(--hover);
+  padding: 1.25rem;
+  border-radius: 10px;
+  border-left: 4px solid var(--primary);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Improved input fields */
+.info-item input,
+.info-item select {
+  width: 90%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  margin-top: 0.5rem;
+}
+
+/* Notification toggle specific styling */
+.notification-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.notification-toggle label {
+  margin-bottom: 0;
+  flex-grow: 1;
+}
+
+.notification-toggle input[type="checkbox"] {
+  width: auto;
+  margin-top: 0;
+  margin-left: 1rem;
+  appearance: none;
+  width: 44px;
+  height: 24px;
+  background: #ddd;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.notification-toggle input[type="checkbox"]::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+
+.notification-toggle input[type="checkbox"]:checked {
+  background: var(--primary);
+}
+
+.notification-toggle input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
+}
+
+/* Make sure inputs don't overflow their containers */
+.info-item > *:not(label) {
+  margin-top: 0.75rem;
+}
+
+/* For select dropdown arrow */
+.info-item select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+/* For password fields */
+.password-field {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+/* Button Styles */
+button {
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary Button (Save) */
+.btn-save {
+    margin-top: 30px;
+  background-color: var(--primary);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-save:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+}
+
+.btn-save:active {
+  transform: translateY(0);
+}
+
+.btn-save::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.btn-save:focus:not(:active)::after {
+  animation: ripple 0.6s ease-out;
+}
+
+/* Danger Buttons (Logout, Delete) */
+.btn-logout,
+.btn-delete {
+  background-color: var(--danger);
+  color: white;
+  position: relative;
+}
+
+.btn-logout:hover,
+.btn-delete:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-logout:active,
+.btn-delete:active {
+  transform: translateY(0);
+}
+
+/* Delete button specific */
+.btn-delete {
+  background-color: var(--danger);
+  padding: 0.75rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+/* Button icons */
+button svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Button focus states */
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.4);
+}
+
+/* Ripple effect animation */
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(20, 20);
+    opacity: 0;
+  }
+}
+
+/* Disabled state */
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Small buttons */
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Full width buttons */
+.btn-block {
+  display: block;
+  width: 100%;
+}

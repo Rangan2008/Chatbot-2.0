@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - EchoBot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='public/profile.css') }}">
+</head>
+
+<body>
+    <a href="/chat" style="text-decoration:none; margin-bottom: 1rem; display:inline-block;">← Back to Chat</a>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img id="avatar-img" src="/static/Avatar.jpeg" alt="Avatar" />
+                    <input type="file" id="avatar-upload" accept="image/*" />
+                </div>
+                <div class="username" id="profile-username">Alice</div>
+            </div>
+            <button class="btn-logout" id="logout-btn">Logout</button>
+        </div>
+
+        <div class="section">
+            <h3>Account Info</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Email:</label>
+                    <input type="email" id="user-email" />
+                </div>
+                <div class="info-item">
+                    <label>Username:</label>
+                    <input type="text" id="user-username" />
+                </div>
+                <div class="info-item">
+                    <label>Joined:</label>
+                    <div id="user-joined">2024-03-15</div>
+                </div>
+                <div class="info-item">
+                    <label>Total Chats:</label>
+                    <div id="user-chats">54</div>
+                </div>
+                <div class="info-item">
+                    <label for="user-password">New Password:</label>
+                    <div class="password-field">
+                        <input type="password" id="user-password" placeholder="Leave blank to keep current" />
+                        <span class="password-toggle">👁️</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label>Confirm Password:</label>
+                    <div class="password-field">
+                        <input type="password" id="confirm-password" placeholder="Confirm new password" />
+                        <span class="password-toggle">👁️</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-save" id="save-profile">Save Changes</button>
+        </div>
+
+        <div class="section">
+            <h3>Preferences</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="notification-toggle">
+                        <label for="notif-toggle">Enable Notifications:</label>
+                        <input type="checkbox" id="notif-toggle" />
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label>Theme:</label>
+                    <select id="theme-select">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <div class="info-item">
+                    <label>Language:</label>
+                    <select id="lang-select">
+                        <option value="English">English</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Spanish">Spanish</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Danger Zone</h3>
+            <button class="btn-logout" style="background:#b91c1c" id="delete-account-btn">
+                🗑️ Delete My Account
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/profile', { credentials: 'include' })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('avatar-img').src = data.avatar || '/static/Avatar.jpeg';
+                    document.getElementById('profile-username').textContent = data.username;
+                    document.getElementById('user-email').value = data.email;
+                    document.getElementById('user-username').value = data.username;
+                    document.getElementById('user-joined').textContent = data.joined_date;
+                    document.getElementById('user-chats').textContent = data.total_chats;
+                    document.getElementById('theme-select').value = data.theme;
+                    document.getElementById('lang-select').value = data.language;
+                    document.getElementById('notif-toggle').checked = data.notifications;
+                })
+                .catch(error => {
+                    console.error('Error fetching profile:', error);
+                    alert('Failed to load profile data');
+                });
+
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                const res = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                if (res.ok) {
+                    window.location.href = '/login';
+                }
+            });
+
+            document.getElementById('save-profile').addEventListener('click', async () => {
+                const email = document.getElementById('user-email').value;
+                const username = document.getElementById('user-username').value;
+                const password = document.getElementById('user-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Invalid email format.');
+                    return;
+                }
+
+                if (password && password.length < 8) {
+                    alert('Password must be at least 8 characters.');
+                    return;
+                }
+
+                if (password && password !== confirmPassword) {
+                    alert('Passwords do not match.');
+                    return;
+                }
+
+                const payload = {
+                    email,
+                    username,
+                    password,
+                    theme: document.getElementById('theme-select').value,
+                    language: document.getElementById('lang-select').value,
+                    notifications: document.getElementById('notif-toggle').checked
+                };
+
+                const res = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json();
+                alert(result.message || 'Profile updated!');
+            });
+
+            document.getElementById('avatar-upload').addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const formData = new FormData();
+                formData.append('avatar', file);
+
+                const res = await fetch('/api/profile/avatar', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('avatar-img').src = data.filename;
+                    alert('Avatar updated!');
+                } else {
+                    const error = await res.json();
+                    alert(error.error || 'Failed to upload avatar.');
+                }
+            });
+
+            // Add click handler to avatar image to trigger file upload
+            document.getElementById('avatar-img').addEventListener('click', () => {
+                document.getElementById('avatar-upload').click();
+            });
+
+            document.getElementById('delete-account-btn').addEventListener('click', async () => {
+                const confirmed = confirm('Are you sure you want to delete your account? This action is irreversible.');
+                if (!confirmed) return;
+
+                const res = await fetch('/api/profile/delete', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (res.ok) {
+                    alert('Your account has been deleted.');
+                    window.location.href = '/login';
+                } else {
+                    alert('Failed to delete account.');
+                }
+            });
+
+            // Add password toggle functionality
+            document.querySelectorAll('.password-toggle').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    const input = e.target.previousElementSibling;
+                    const type = input.type === 'password' ? 'text' : 'password';
+                    input.type = type;
+                    e.target.textContent = type === 'password' ? '👁️' : '🙈';
+                });
+            });
+        });
+                </script>
+    </body>
+
+</html>
